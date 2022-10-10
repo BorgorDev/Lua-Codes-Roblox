@@ -1,0 +1,40 @@
+Currency system:
+Tutorial if u want: https://www.youtube.com/watch?v=oj2RWA2hT74
+
+Code:
+
+local DataStoreService = game:GetService("DataStoreService")
+local CoinsStore = DataStoreService:GetDataStore("CoinsStore")
+
+game.Players.PlayerAdded:Connect(function(player)
+ 
+ local leaderstats = Instance.new("Folder") --making leaderstats
+ leaderstats.Name = "leaderstats"
+ leaderstats.Parent = player
+ 
+ local Coins = Instance.new("IntValue") --making coins
+ Coins.Name = "Coins"
+ Coins.Parent = leaderstats
+ 
+ 
+ 
+ local UserId = player.UserId
+ 
+ local data
+ 
+ local success, errormessage = pcall(function() --getting loaded data
+  data = CoinsStore:GetAsync(UserId)
+ end)
+ 
+ if success then
+  Coins.Value = data
+ end
+end)
+
+
+game.Players.PlayerRemoving:Connect(function(player)
+ local UserId = player.UserId
+ local data = player.leaderstats.Coins.Value
+ 
+ CoinsStore:SetAsync(UserId, data)
+end)
